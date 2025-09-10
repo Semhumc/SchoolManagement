@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Container, Box, TextField, Button, Typography, Paper, Alert } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {
@@ -59,6 +60,13 @@ function LoginPage() {
           >
             Giriş Yap
           </Button>
+          <Box textAlign="center">
+            <Link to="/register" style={{ textDecoration: 'none' }}>
+              <Typography variant="body2" color="primary">
+                Hesabınız yok mu? Kayıt olun
+              </Typography>
+            </Link>
+          </Box>
         </Box>
       </Paper>
     </Container>

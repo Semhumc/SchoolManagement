@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Box, Divider } from '@mui/material';
-import { People, School, Class, BarChart, Comment, Home, Logout } from '@mui/icons-material';
+import { People, School, Class, BarChart, Comment, Home, Logout, PersonAdd, EventNote } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 
@@ -25,6 +24,7 @@ const menuItems: MenuItems = {
     { text: 'Öğrenciler', icon: <People />, path: '/students' },
     { text: 'Öğretmenler', icon: <School />, path: '/teachers' },
     { text: 'Dersler', icon: <Class />, path: '/classes' },
+    { text: 'Kullanıcı Kayıt', icon: <PersonAdd />, path: '/register' },
   ],
   Teacher: [
     { text: 'Anasayfa', icon: <Home />, path: '/' },
@@ -33,7 +33,7 @@ const menuItems: MenuItems = {
   ],
   Student: [
     { text: 'Anasayfa', icon: <Home />, path: '/' },
-    { text: 'Ders Programım', icon: <Class />, path: '/my-schedule' },
+    { text: 'Ders Programım', icon: <EventNote />, path: '/my-schedule' },
     { text: 'Notlarım', icon: <BarChart />, path: '/my-scores' },
     { text: 'Devamsızlık', icon: <Comment />, path: '/my-attendance' },
     { text: 'Yorumlarım', icon: <Comment />, path: '/my-comments' },

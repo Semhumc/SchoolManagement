@@ -5,7 +5,6 @@ using SchoolManagement.Data;
 using SchoolManagement.Services;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add CORS services
@@ -23,7 +22,15 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Tüm servisleri ekle
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<TeacherService>();
+builder.Services.AddScoped<ClassService>();
+builder.Services.AddScoped<ClassManagementService>();
+builder.Services.AddScoped<AttendanceService>();
+builder.Services.AddScoped<ScoreService>();
+builder.Services.AddScoped<CommentService>();
 
 // JWT Authentication ayarı
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,12 +49,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<StudentService>();
-builder.Services.AddScoped<TeacherService>();
-builder.Services.AddScoped<ClassService>();
-builder.Services.AddScoped<ClassManagementService>();
-
-
 
 var app = builder.Build();
 
@@ -56,9 +57,6 @@ app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-
-
 
 app.MapControllers();
 
