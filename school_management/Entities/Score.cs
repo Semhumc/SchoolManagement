@@ -13,7 +13,7 @@ namespace SchoolManagement.Entities
         public int ClassId { get; set; }
         public Class Class { get; set; } = null!;
 
-        public decimal Value { get; set; }
+        public int Value { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

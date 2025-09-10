@@ -138,3 +138,8 @@ C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\Micro
 C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\frontend\package-lock.json
+C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\frontend\package.json
+C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\frontend\tsconfig.app.json
+C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\frontend\tsconfig.json
+C:\Users\SEMIH\Desktop\SchoolManagement\school_management\bin\Debug\net9.0\frontend\tsconfig.node.json
