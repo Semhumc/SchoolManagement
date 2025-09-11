@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, List, ListItem, Checkbox, FormControlLabel } from '@mui/material';
 import { getAllStudents, type StudentDto } from '../../services/studentService';
-import { addAttendance } from '../../services/attendanceService';
+import { markAttendance } from '../../services/attendanceService';
 
 function TakeAttendancePage() {
   const { classId } = useParams<{ classId: string }>();
@@ -47,7 +47,7 @@ function TakeAttendancePage() {
     // Backend'de classScheduleId gerekiyor, şimdilik 1 varsayıyoruz.
     const classScheduleId = 1; 
     const promises = Object.entries(attendance).map(([studentId, isPresent]) => 
-      addAttendance({ studentId: Number(studentId), classScheduleId, isPresent })
+      markAttendance({ studentId: Number(studentId), classScheduleId, isPresent })
     );
     try {
       await Promise.all(promises);

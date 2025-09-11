@@ -13,6 +13,7 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
+  loading: boolean; // Yüklenme durumunu ekle
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -32,6 +33,7 @@ const getRoleFromToken = (token: string): string | null => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Yüklenme state'i ekle
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser({ email, role });
       }
     }
+    setLoading(false); // Kontrol bitince yüklenmeyi durdur
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -73,7 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

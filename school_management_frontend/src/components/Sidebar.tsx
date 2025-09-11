@@ -24,11 +24,13 @@ const menuItems: MenuItems = {
     { text: 'Öğrenciler', icon: <People />, path: '/students' },
     { text: 'Öğretmenler', icon: <School />, path: '/teachers' },
     { text: 'Dersler', icon: <Class />, path: '/classes' },
+    { text: 'Ders Programları', icon: <EventNote />, path: '/schedules' },
     { text: 'Kullanıcı Kayıt', icon: <PersonAdd />, path: '/register' },
   ],
   Teacher: [
     { text: 'Anasayfa', icon: <Home />, path: '/' },
     { text: 'Derslerim', icon: <Class />, path: '/classes' },
+    { text: 'Ders Programlarım', icon: <EventNote />, path: '/my-schedules' },
     { text: 'Öğrenciler', icon: <People />, path: '/students' },
   ],
   Student: [

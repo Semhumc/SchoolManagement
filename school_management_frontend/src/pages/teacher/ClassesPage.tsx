@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getTeacherClasses } from '../services/classService';
+import { getTeacherClasses } from '../../services/classService';
 
 interface Class {
     id: string;

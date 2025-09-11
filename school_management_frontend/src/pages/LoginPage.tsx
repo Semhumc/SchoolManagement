@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Container, Box, TextField, Button, Typography, Paper, Alert } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {

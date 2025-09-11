@@ -28,16 +28,15 @@ namespace SchoolManagement.Services
             await _context.SaveChangesAsync();
 
             var schedule = await _context.ClassSchedules
-                .Include(cs => cs.ClassTeacher)
-                .ThenInclude(ct => ct.Class)
-                .FirstOrDefaultAsync(cs => cs.Id == dto.ClassScheduleId);
+                .Include(cs => cs.Class)
+                .FirstOrDefaultAsync(cs => cs.ClassScheduleId == dto.ClassScheduleId);
 
             return new AttendanceDto
             {
                 Id = attendance.Id,
                 StudentName = (await _context.Users.FindAsync(dto.StudentId))?.FirstName ?? "Unknown",
-                ClassName = schedule?.ClassTeacher.Class.ClassName ?? "Unknown",
-                Date = schedule?.Date ?? DateTime.UtcNow,
+                ClassName = schedule?.Class?.ClassName ?? "Unknown",
+                Date = schedule?.ScheduleDate ?? DateTime.UtcNow,
                 IsPresent = attendance.IsPresent
             };
         }
@@ -48,15 +47,14 @@ namespace SchoolManagement.Services
             return await _context.Attendances
                 .Where(a => a.StudentId == studentId)
                 .Include(a => a.ClassSchedule)
-                    .ThenInclude(cs => cs.ClassTeacher)
-                    .ThenInclude(ct => ct.Class)
+                    .ThenInclude(cs => cs.Class)
                     .Include(a => a.Student)
                 .Select(a => new AttendanceDto
                 {
                     Id = a.Id,
-                    StudentName = a.Student.FirstName + " " + a.Student.LastName,
-                    ClassName = a.ClassSchedule.ClassTeacher.Class.ClassName,
-                    Date = a.ClassSchedule.Date,
+                    StudentName = a.Student!.FirstName + " " + a.Student!.LastName,
+                    ClassName = a.ClassSchedule.Class!.ClassName,
+                    Date = a.ClassSchedule.ScheduleDate,
                     IsPresent = a.IsPresent
                 })
                 .ToListAsync();

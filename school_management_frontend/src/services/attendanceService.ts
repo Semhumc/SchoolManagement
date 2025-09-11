@@ -22,7 +22,7 @@ export const getMyAttendance = async (): Promise<AttendanceDto[]> => {
 };
 
 // Tek bir devamsızlık kaydı ekler
-export const addAttendance = async (data: CreateAttendanceDto): Promise<AttendanceDto> => {
+export const markAttendance = async (data: CreateAttendanceDto): Promise<AttendanceDto> => {
     const response = await api.post('/attendance', data);
     return response.data;
 };

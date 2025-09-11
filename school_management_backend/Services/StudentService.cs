@@ -111,5 +111,23 @@ namespace SchoolManagement.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        // Derse göre öğrencileri getir
+        public async Task<List<StudentDto>> GetStudentsByClassIdAsync(int classId)
+        {
+            return await _context.ClassStudents
+                .Where(cs => cs.ClassId == classId)
+                .Include(cs => cs.Student)
+                .Select(cs => new StudentDto
+                {
+                    Id = cs.Student.Id,
+                    FirstName = cs.Student.FirstName,
+                    LastName = cs.Student.LastName,
+                    Email = cs.Student.Email,
+                    Phone = cs.Student.Phone,
+                    Role = cs.Student.Role.ToString()
+                })
+                .ToListAsync();
+        }
     }
 }

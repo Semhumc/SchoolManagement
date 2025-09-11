@@ -1,0 +1,14 @@
+namespace SchoolManagement.DTOs
+{
+    public class ClassScheduleDto
+    {
+        public int ClassScheduleId { get; set; }
+        public int ClassId { get; set; }
+        public string ClassName { get; set; } = null!;
+        public int TeacherId { get; set; }
+        public string TeacherName { get; set; } = null!;
+        public DateTime ScheduleDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+    }
+}

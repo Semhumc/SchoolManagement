@@ -53,7 +53,7 @@ namespace SchoolManagement.Services
             }
 
             if (user.PasswordHash != loginDto.Password)
-                return null;
+                throw new Exception("Invalid credentials");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);

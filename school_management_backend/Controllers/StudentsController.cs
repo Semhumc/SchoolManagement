@@ -66,7 +66,7 @@ namespace SchoolManagement.Controllers
             return Ok(updated);
         }
 
-        // Admin & Teacher silebilir
+                // Admin & Teacher silebilir
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Delete(int id)
@@ -74,6 +74,15 @@ namespace SchoolManagement.Controllers
             var success = await _studentService.DeleteAsync(id);
             if (!success) return NotFound();
             return NoContent();
+        }
+
+        // Teacher: Derse göre öğrencileri getir
+        [HttpGet("by-class/{classId}")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> GetStudentsByClassId(int classId)
+        {
+            var students = await _studentService.GetStudentsByClassIdAsync(classId);
+            return Ok(students);
         }
     }
 }

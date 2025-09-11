@@ -3,6 +3,7 @@ import StudentManagementPage from './StudentManagementPage';
 import TeacherManagementPage from './TeacherManagementPage';
 import ClassManagementPage from './admin/ClassManagementPage';
 import AdminRegisterPage from './admin/AdminRegisterPage';
+import AdminClassScheduleManagementPage from './admin/AdminClassScheduleManagementPage';
 import HomePage from './HomePage';
 
 function AdminDashboard() {
@@ -12,6 +13,7 @@ function AdminDashboard() {
       <Route path="/students" element={<StudentManagementPage />} />
       <Route path="/teachers" element={<TeacherManagementPage />} />
       <Route path="/classes" element={<ClassManagementPage />} />
+      <Route path="/schedules" element={<AdminClassScheduleManagementPage />} />
       <Route path="/register" element={<AdminRegisterPage />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

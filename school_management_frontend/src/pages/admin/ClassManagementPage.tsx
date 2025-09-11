@@ -6,7 +6,7 @@ import {
   Modal, 
   TextField, 
   Paper, 
-  Select, 
+  Select,
   MenuItem, 
   OutlinedInput, 
   Checkbox, 
@@ -16,8 +16,8 @@ import {
   Alert,
   type SelectChangeEvent 
 } from '@mui/material';
-import { DataGrid, type GridColDef, type GridRowId } from '@mui/x-data-grid';
-import { getAllClasses, createClass, deleteClass, type ClassDto, type CreateClassDto } from '../../services/classService';
+import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid';
+import { getAllClasses, createClass, type ClassDto, type CreateClassDto } from '../../services/classService';
 import { getAllTeachers, type TeacherDto } from '../../services/teacherService';
 
 const modalStyle = { 
@@ -51,10 +51,8 @@ function ClassManagementPage() {
       
       console.log('Classes data:', classData);
       console.log('Teachers data:', teacherData);
-      
       setClasses(classData);
       setTeachers(teacherData);
-      setSuccess('Veriler başarıyla yüklendi');
     } catch (error) {
       console.error("Veriler yüklenirken hata oluştu:", error);
       setError('Veriler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.');
@@ -76,19 +74,6 @@ function ClassManagementPage() {
     setError('');
   };
 
-  const handleDelete = async (id: GridRowId) => {
-    if (window.confirm('Bu dersi silmek istediğinizden emin misiniz?')) {
-      try {
-        await deleteClass(Number(id));
-        await fetchAllData(); // Listeyi yenile
-        setSuccess('Ders başarıyla silindi');
-      } catch (error) { 
-        console.error('Ders silinirken hata:', error);
-        setError('Ders silinirken bir hata oluştu.');
-      }
-    }
-  };
-
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newClassName.trim()) {
@@ -97,14 +82,14 @@ function ClassManagementPage() {
     }
 
     try {
+      setSuccess('');
+      setError('');
       const createData: CreateClassDto = {
         className: newClassName,
         teacherIds: selectedTeacherIds
       };
-      
-      console.log('Creating class with data:', createData);
       await createClass(createData);
-      await fetchAllData(); // Listeyi yenile
+      await fetchAllData();
       handleClose();
       setSuccess('Ders başarıyla oluşturuldu');
     } catch (error) { 
@@ -118,39 +103,30 @@ function ClassManagementPage() {
     setSelectedTeacherIds(typeof value === 'string' ? [] : value);
   };
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<ClassDto>[] = [
     { field: 'id', headerName: 'ID', width: 90 },
     { field: 'className', headerName: 'Ders Adı', flex: 1 },
+    {
+      field: 'teachers',
+      headerName: 'Öğretmenler',
+      flex: 1,
+      valueGetter: (params: GridRenderCellParams<ClassDto>) => params?.row?.teachers?.join(', ') || ''
+    },
     { 
       field: 'studentCount', 
       headerName: 'Öğrenci Sayısı', 
       width: 150, 
-      valueGetter: (params: { row: ClassDto }) => params.row.students?.length || 0
-    },
-    { 
-      field: 'teacherCount', 
-      headerName: 'Öğretmen Sayısı', 
-      width: 150, 
-      valueGetter: (params: { row: ClassDto }) => params.row.teachers?.length || 0
+      valueGetter: (params: GridRenderCellParams<ClassDto>) => params?.row?.students?.length || 0
     },
     {
       field: 'actions', 
       headerName: 'İşlemler', 
       width: 150, 
       sortable: false,
-      renderCell: (params) => (
-        <Button 
-          size="small" 
-          color="error" 
-          onClick={() => handleDelete(params.id)}
-        >
-          Sil
-        </Button>
-      ),
+      renderCell: () => 'İşlem' // Simplified renderCell
     },
   ];
 
-  // Success mesajını otomatik temizle
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => setSuccess(''), 3000);
@@ -183,13 +159,8 @@ function ClassManagementPage() {
         rows={classes} 
         columns={columns} 
         loading={loading}
-        pageSizeOptions={[10, 25, 50]}
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 10 },
-          },
-        }}
-        sx={{ height: '100%' }}
+        getRowId={(row) => row.id}
+        sx={{ height: '100%', minHeight: 300 }}
       />
       
       <Modal open={open} onClose={handleClose}>

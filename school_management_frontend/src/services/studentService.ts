@@ -45,3 +45,8 @@ export const updateStudent = async (id: number, studentData: CreateStudentDto): 
 export const deleteStudent = async (id: number): Promise<void> => {
   await api.delete(`/students/${id}`);
 };
+
+export const getStudentsByClassId = async (classId: number): Promise<StudentDto[]> => {
+  const response = await api.get(`/students/by-class/${classId}`);
+  return response.data;
+};

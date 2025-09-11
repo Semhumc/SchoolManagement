@@ -17,17 +17,34 @@ namespace SchoolManagement.Services
         // Admin: tüm dersleri getir
         public async Task<List<ClassDto>> GetAllAsync()
         {
-            return await _context.Classes
-                .Include(c => c.ClassTeachers).ThenInclude(ct => ct.Teacher)
+            var classes = await _context.Classes
+                .Include(c => c.ClassTeachers) // Sadece ClassTeachers'ı dahil et
                 .Include(c => c.ClassStudents).ThenInclude(cs => cs.Student)
-                .Select(c => new ClassDto
-                {
-                    Id = c.Id,
-                    ClassName = c.ClassName,
-                    Teachers = c.ClassTeachers.Select(t => t.Teacher.FirstName + " " + t.Teacher.LastName).ToList(),
-                    Students = c.ClassStudents.Select(s => s.Student.FirstName + " " + s.Student.LastName).ToList()
-                })
                 .ToListAsync();
+
+            var classDtos = new List<ClassDto>();
+            foreach (var cls in classes)
+            {
+                var teacherNames = new List<string>();
+                foreach (var classTeacher in cls.ClassTeachers)
+                {
+                    // Her ClassTeacher için Öğretmeni manuel olarak yükle
+                    var teacher = await _context.Users.FindAsync(classTeacher.TeacherId);
+                    if (teacher != null)
+                    {
+                        teacherNames.Add($"{teacher.FirstName} {teacher.LastName}");
+                    }
+                }
+
+                classDtos.Add(new ClassDto
+                {
+                    Id = cls.Id,
+                    ClassName = cls.ClassName,
+                    Teachers = teacherNames,
+                    Students = cls.ClassStudents.Select(s => s.Student!.FirstName + " " + s.Student!.LastName).ToList()
+                });
+            }
+            return classDtos;
         }
 
         // Teacher: kendi derslerini getir
@@ -36,11 +53,12 @@ namespace SchoolManagement.Services
             return await _context.ClassTeachers
                 .Where(ct => ct.TeacherId == teacherId)
                 .Include(ct => ct.Class).ThenInclude(c => c.ClassStudents).ThenInclude(cs => cs.Student)
+                .Include(ct => ct.Class).ThenInclude(c => c.ClassTeachers).ThenInclude(ct => ct.Teacher)
                 .Select(ct => new ClassDto
                 {
                     Id = ct.Class.Id,
                     ClassName = ct.Class.ClassName,
-                    Teachers = ct.Class.ClassTeachers.Select(t => t.Teacher.FirstName + " " + t.Teacher.LastName).ToList(),
+                    Teachers = ct.Class.ClassTeachers.Select(t => t.Teacher!.FirstName + " " + t.Teacher!.LastName).ToList(),
                     Students = ct.Class.ClassStudents.Select(s => s.Student.FirstName + " " + s.Student.LastName).ToList()
                 })
                 .ToListAsync();

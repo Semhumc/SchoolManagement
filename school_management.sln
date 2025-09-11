@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "school_management", "school_management\school_management.csproj", "{D3CC4150-5462-4A7C-9BFB-D9EE43E46F48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "school_management", "school_management_backend\school_management.csproj", "{D3CC4150-5462-4A7C-9BFB-D9EE43E46F48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

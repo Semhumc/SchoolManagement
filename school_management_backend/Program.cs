@@ -34,6 +34,7 @@ builder.Services.AddScoped<ScoreService>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<ClassTeacherService>();
 builder.Services.AddScoped<ClassTeacherRepository>();
+builder.Services.AddScoped<ClassScheduleService>();
 
 
 // JWT Authentication ayarı
