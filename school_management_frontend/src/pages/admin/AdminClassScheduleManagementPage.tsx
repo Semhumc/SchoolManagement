@@ -24,7 +24,7 @@ import {
   type CreateClassScheduleDto,
 } from '../../services/classScheduleService';
 
-type TimeSpan = string; // TimeSpan tanımı eklendi
+type TimeSpan = string;
 
 const modalStyle = {
   position: 'absolute',
@@ -44,13 +44,12 @@ function AdminClassScheduleManagementPage() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [currentSchedule, setCurrentSchedule] = useState<CreateClassScheduleDto & { id?: number }>({ // id for edit mode
+  const [currentSchedule, setCurrentSchedule] = useState<CreateClassScheduleDto & { id?: number }>({
     classId: 0,
     teacherId: 0,
-    scheduleDate: new Date().toISOString().split('T')[0], // Date to string
+    scheduleDate: new Date().toISOString().split('T')[0],
     startTime: '08:00',
     endTime: '09:00',
-    location: '',
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -83,23 +82,21 @@ function AdminClassScheduleManagementPage() {
     if (schedule) {
       setEditMode(true);
       setCurrentSchedule({
-        id: schedule.id, // PascalCase to camelCase
-        classId: schedule.classId, // PascalCase to camelCase
-        teacherId: schedule.teacherId, // PascalCase to camelCase
-        scheduleDate: schedule.scheduleDate, // Already string
+        id: schedule.classScheduleId, // Backend field adını kullan
+        classId: schedule.classId,
+        teacherId: schedule.teacherId,
+        scheduleDate: schedule.scheduleDate,
         startTime: schedule.startTime,
         endTime: schedule.endTime,
-        location: schedule.location,
       });
     } else {
       setEditMode(false);
       setCurrentSchedule({
         classId: 0,
         teacherId: 0,
-        scheduleDate: new Date().toISOString().split('T')[0], // Date to string
+        scheduleDate: new Date().toISOString().split('T')[0],
         startTime: '08:00',
         endTime: '09:00',
-        location: '',
       });
     }
     setOpen(true);
@@ -151,7 +148,7 @@ function AdminClassScheduleManagementPage() {
   };
 
   const columns: GridColDef<ClassScheduleDto>[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'classScheduleId', headerName: 'ID', width: 90 },
     { field: 'className', headerName: 'Ders Adı', flex: 1 },
     { field: 'teacherName', headerName: 'Öğretmen Adı', flex: 1 },
     {
@@ -162,7 +159,6 @@ function AdminClassScheduleManagementPage() {
     },
     { field: 'startTime', headerName: 'Başlangıç Saati', width: 150 },
     { field: 'endTime', headerName: 'Bitiş Saati', width: 150 },
-    { field: 'location', headerName: 'Konum', flex: 1 },
     {
       field: 'actions',
       headerName: 'İşlemler',
@@ -212,7 +208,7 @@ function AdminClassScheduleManagementPage() {
         rows={schedules}
         columns={columns}
         loading={loading}
-        getRowId={(row) => row.id} // Ensure correct ID property
+        getRowId={(row) => row.classScheduleId} // Doğru ID field'ını kullan
         sx={{ height: '100%', minHeight: 300 }}
       />
 
@@ -301,16 +297,6 @@ function AdminClassScheduleManagementPage() {
               InputLabelProps={{
                 shrink: true,
               }}
-            />
-
-            <TextField
-              label="Konum"
-              fullWidth
-              sx={{ mb: 2 }}
-              value={currentSchedule.location}
-              onChange={(e) =>
-                setCurrentSchedule({ ...currentSchedule, location: e.target.value })
-              }
             />
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>

@@ -1,10 +1,10 @@
+// services/classScheduleService.ts - Düzeltilmiş
 import api from './api';
 
-// Backend'deki TimeSpan'a karşılık gelen string formatı
 type TimeSpan = string;
 
 export interface ClassScheduleDto {
-  id: number;
+  classScheduleId: number; // Backend'deki field adıyla uyumlu
   classId: number;
   className: string;
   teacherId: number;
@@ -12,17 +12,15 @@ export interface ClassScheduleDto {
   scheduleDate: string; // ISO 8601 formatında tarih stringi
   startTime: TimeSpan;
   endTime: TimeSpan;
-  status: string; // Ders durumu eklendi
-  location: string;
+  status?: string; // Optional status field eklendi
 }
 
 export interface CreateClassScheduleDto {
   classId: number;
   teacherId: number;
-  scheduleDate: string; // ISO 8601 formatında tarih stringi
+  scheduleDate: string; // ISO 8601 formatında tarih stringi  
   startTime: TimeSpan;
   endTime: TimeSpan;
-  location: string;
 }
 
 export const getAllClassSchedules = async (): Promise<ClassScheduleDto[]> => {

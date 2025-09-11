@@ -2,8 +2,7 @@ namespace SchoolManagement.Entities
 {
     public class ClassTeacher
     {
-     public int Id { get; set; }
-
+        // Id field'ını kaldır, composite key kullan
         public int ClassId { get; set; }
         public Class Class { get; set; } = null!;
 

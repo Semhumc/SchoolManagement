@@ -23,83 +23,101 @@ namespace SchoolManagement.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // User and ClassTeacher (Many-to-Many)
+            // ClassTeacher - Composite key düzeltmesi
             modelBuilder.Entity<ClassTeacher>()
                 .HasKey(ct => new { ct.ClassId, ct.TeacherId });
+
             modelBuilder.Entity<ClassTeacher>()
                 .HasOne(ct => ct.Class)
                 .WithMany(c => c.ClassTeachers)
-                .HasForeignKey(ct => ct.ClassId);
+                .HasForeignKey(ct => ct.ClassId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ClassTeacher>()
                 .HasOne(ct => ct.Teacher)
                 .WithMany(t => t.ClassTeachers)
-                .HasForeignKey(ct => ct.TeacherId);
+                .HasForeignKey(ct => ct.TeacherId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // User and ClassStudent (Many-to-Many)
+            // ClassStudent - Composite key düzeltmesi
             modelBuilder.Entity<ClassStudent>()
                 .HasKey(cs => new { cs.ClassId, cs.StudentId });
+
             modelBuilder.Entity<ClassStudent>()
                 .HasOne(cs => cs.Class)
                 .WithMany(c => c.ClassStudents)
-                .HasForeignKey(cs => cs.ClassId);
+                .HasForeignKey(cs => cs.ClassId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ClassStudent>()
                 .HasOne(cs => cs.Student)
                 .WithMany(s => s.ClassStudents)
-                .HasForeignKey(cs => cs.StudentId);
+                .HasForeignKey(cs => cs.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // ClassSchedule and Class (One-to-Many)
+            // ClassSchedule ilişkileri
             modelBuilder.Entity<ClassSchedule>()
                 .HasOne(cs => cs.Class)
-                .WithMany(c => c.ClassSchedules) // Assuming Class has a ClassSchedules collection
-                .HasForeignKey(cs => cs.ClassId);
+                .WithMany(c => c.ClassSchedules)
+                .HasForeignKey(cs => cs.ClassId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // ClassSchedule and User (Teacher) (One-to-Many)
             modelBuilder.Entity<ClassSchedule>()
                 .HasOne(cs => cs.Teacher)
-                .WithMany(u => u.ClassSchedules) // User now has ClassSchedules collection
-                .HasForeignKey(cs => cs.TeacherId);
+                .WithMany(u => u.ClassSchedules)
+                .HasForeignKey(cs => cs.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Attendance and ClassSchedule (One-to-Many)
+            // Attendance ilişkileri
             modelBuilder.Entity<Attendance>()
                 .HasOne(a => a.ClassSchedule)
-                .WithMany(cs => cs.Attendances) // ClassSchedule now has Attendances collection
-                .HasForeignKey(a => a.ClassScheduleId);
+                .WithMany(cs => cs.Attendances)
+                .HasForeignKey(a => a.ClassScheduleId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Attendance and User (Student) (One-to-Many)
             modelBuilder.Entity<Attendance>()
                 .HasOne(a => a.Student)
-                .WithMany(u => u.Attendances) // User now has Attendances collection
-                .HasForeignKey(a => a.StudentId);
+                .WithMany(u => u.Attendances)
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Comment and Class (One-to-Many)
+            // Comment ilişkileri düzeltmesi
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Student)
+                .WithMany() // User'da Comments collection'ı olmadığı için
+                .HasForeignKey(c => c.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.Teacher)
+                .WithMany()
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Class)
                 .WithMany(cl => cl.Comments)
-                .HasForeignKey(c => c.ClassId);
+                .HasForeignKey(c => c.ClassId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Score and Class (One-to-Many)
+            // Score ilişkileri
+            modelBuilder.Entity<Score>()
+                .HasOne(s => s.Student)
+                .WithMany(u => u.Scores)
+                .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Score>()
+                .HasOne(s => s.Teacher)
+                .WithMany()
+                .HasForeignKey(s => s.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Score>()
                 .HasOne(s => s.Class)
                 .WithMany(cl => cl.Scores)
-                .HasForeignKey(s => s.ClassId);
-
-            // Score and User (Student) (One-to-Many)
-            modelBuilder.Entity<Score>()
-                .HasOne(s => s.Student)
-                .WithMany(u => u.Scores) // User now has Scores collection
-                .HasForeignKey(s => s.StudentId);
-
-            // ClassManagement and Class (One-to-Many)
-            modelBuilder.Entity<ClassManagement>()
-                .HasOne(cm => cm.Class)
-                .WithMany() // Assuming Class does not have a ClassManagements collection
-                .HasForeignKey(cm => cm.ClassId);
-
-            // ClassManagement and User (Teacher) (One-to-Many)
-            modelBuilder.Entity<ClassManagement>()
-                .HasOne(cm => cm.Teacher)
-                .WithMany() // Assuming User does not have a ClassManagements collection
-                .HasForeignKey(cm => cm.TeacherId);
+                .HasForeignKey(s => s.ClassId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Enum conversions
             modelBuilder.Entity<User>()
@@ -110,5 +128,6 @@ namespace SchoolManagement.Data
                 .Property(c => c.Status)
                 .HasConversion<int>();
         }
+
     }
 }

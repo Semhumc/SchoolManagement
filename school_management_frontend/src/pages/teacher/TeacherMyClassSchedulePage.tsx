@@ -98,7 +98,7 @@ function TeacherMyClassSchedulePage() {
       for (const record of attendanceRecords) {
         const dto: CreateAttendanceDto = {
           studentId: record.studentId,
-          classScheduleId: currentClassSchedule.id,
+          classScheduleId: currentClassSchedule.classScheduleId, // Düzeltildi: id -> classScheduleId
           isPresent: record.isPresent,
         };
         await markAttendance(dto);
@@ -126,7 +126,7 @@ function TeacherMyClassSchedulePage() {
   };
 
   const columns: GridColDef<ClassScheduleDto>[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'classScheduleId', headerName: 'ID', width: 90 },
     { field: 'className', headerName: 'Ders Adı', flex: 1 },
     { field: 'teacherName', headerName: 'Öğretmen Adı', flex: 1 },
     {
@@ -150,9 +150,9 @@ function TeacherMyClassSchedulePage() {
           <FormControl size="small" sx={{ ml: 1, minWidth: 120 }}>
             <InputLabel>Durum</InputLabel>
             <Select
-              value={params.row.status || ''} // Assuming status field exists in ClassScheduleDto
+              value={''} // Status field'ı şimdilik boş bırakıyoruz
               label="Durum"
-              onChange={(e) => handleUpdateStatus(params.row.id, e.target.value as string)}
+              onChange={(e) => handleUpdateStatus(params.row.classScheduleId, e.target.value as string)} // Düzeltildi: id -> classScheduleId
             >
               <MenuItem value="start">Başladı</MenuItem>
               <MenuItem value="present">Devam Ediyor</MenuItem>
@@ -193,7 +193,7 @@ function TeacherMyClassSchedulePage() {
         rows={schedules}
         columns={columns}
         loading={loading}
-        getRowId={(row) => row.id}
+        getRowId={(row) => row.classScheduleId} // Düzeltildi: id -> classScheduleId
         sx={{ height: '100%', minHeight: 300 }}
       />
 
