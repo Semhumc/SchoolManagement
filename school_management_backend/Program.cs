@@ -8,21 +8,20 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS services - DÜZELTME: Daha geniş CORS policy
+// CORS yapılandırması - tek seferde tanımla
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173") // Frontend portlarını ekle
+            policy.WithOrigins("http://localhost:5173", "http://localhost:3000") // Frontend portlarını ekle
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials(); // Credentials'a izin ver
         });
 });
 
-
-
+// Database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -57,17 +56,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigin",
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:5173")
-                   .AllowAnyHeader()
-                   .AllowAnyMethod();
-        });
-});
-
 var app = builder.Build();
 
 // Development ortamında daha detaylı hata mesajları
@@ -78,7 +66,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-app.UseCors("AllowSpecificOrigin"); // CORS routing'den sonra
+// CORS'u authentication'dan önce kullan
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication(); // önce authentication
 app.UseAuthorization();  // sonra authorization
