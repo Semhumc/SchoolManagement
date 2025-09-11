@@ -12,13 +12,13 @@ namespace SchoolManagement.Services
             _classTeacherRepository = classTeacherRepository;
         }
 
-        public async Task<IEnumerable<ClassTeacherDto>> GetClassesByTeacher(Guid teacherId)
+        public async Task<IEnumerable<ClassTeacherDto>> GetClassesByTeacher(int teacherId)
         {
             var classTeachers = await _classTeacherRepository.GetClassesByTeacher(teacherId);
             return classTeachers.Select(ct => new ClassTeacherDto
             {
                 Id = ct.ClassId,
-                Name = ct.Class.Name,
+                Name = ct.Class.ClassName,
                 TeacherId = ct.TeacherId,
                 TeacherName = ct.Teacher.FirstName
             });

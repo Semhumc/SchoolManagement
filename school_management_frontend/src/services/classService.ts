@@ -9,11 +9,12 @@ export interface ClassDto {
 
 export interface CreateClassDto {
   className: string;
+  teacherIds: number[]; // EKLE: Bu alan eksikti
 }
 
 export const getTeacherClasses = async () => {
-    const response = await api.get('/ClassTeacher');
-    return response.data;
+  const response = await api.get('/ClassTeacher');
+  return response.data;
 };
 
 // Admin: Tüm dersleri getir
@@ -28,7 +29,7 @@ export const getMyClasses = async (): Promise<ClassDto[]> => {
   return response.data;
 };
 
-// Admin: Yeni ders oluştur
+// Admin: Yeni ders oluştur - DÜZELTME: teacherIds parametresi ekle
 export const createClass = async (classData: CreateClassDto): Promise<ClassDto> => {
   const response = await api.post('/classes', classData);
   return response.data;

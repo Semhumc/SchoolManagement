@@ -13,7 +13,7 @@ namespace SchoolManagement.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<ClassTeacher>> GetClassesByTeacher(Guid teacherId)
+        public async Task<IEnumerable<ClassTeacher>> GetClassesByTeacher(int teacherId)
         {
             return await _context.ClassTeachers
                 .Include(ct => ct.Class)

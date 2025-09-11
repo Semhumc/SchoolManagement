@@ -4,7 +4,7 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import ClassesPage from './pages/teacher/ClassesPage';
+
 
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -49,7 +49,6 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/classes" element={<ClassesPage />} />
             <Route path="/*" element={<Dashboard />} />
           </Routes>
         </AuthProvider>

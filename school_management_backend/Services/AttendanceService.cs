@@ -50,6 +50,7 @@ namespace SchoolManagement.Services
                 .Include(a => a.ClassSchedule)
                     .ThenInclude(cs => cs.ClassTeacher)
                     .ThenInclude(ct => ct.Class)
+                    .Include(a => a.Student)
                 .Select(a => new AttendanceDto
                 {
                     Id = a.Id,

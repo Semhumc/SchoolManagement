@@ -20,7 +20,7 @@ namespace SchoolManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetClasses()
         {
-            var teacherId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var teacherId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var classes = await _classTeacherService.GetClassesByTeacher(teacherId);
             return Ok(classes);
         }
