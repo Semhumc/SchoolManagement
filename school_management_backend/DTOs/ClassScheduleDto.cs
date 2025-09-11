@@ -9,7 +9,7 @@ namespace SchoolManagement.DTOs
         public int TeacherId { get; set; }
         public string TeacherName { get; set; } = null!;
         public DateTime ScheduleDate { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public string StartTime { get; set; } = null!;
+        public string EndTime { get; set; } = null!;
     }
 }

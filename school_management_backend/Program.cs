@@ -8,15 +8,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS services
+// Add CORS services - DÜZELTME: Daha geniş CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder =>
+        policy =>
         {
-            builder.WithOrigins("http://localhost:5173") // Frontend'inizin çalıştığı adres
+            policy.WithOrigins("http://localhost:5173", "http://localhost:3000") // Frontend portlarını ekle
                    .AllowAnyHeader()
-                   .AllowAnyMethod();
+                   .AllowAnyMethod()
+                   .AllowCredentials(); // Credentials'a izin ver
         });
 });
 
@@ -35,7 +36,6 @@ builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<ClassTeacherService>();
 builder.Services.AddScoped<ClassTeacherRepository>();
 builder.Services.AddScoped<ClassScheduleService>();
-
 
 // JWT Authentication ayarı
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -57,8 +57,14 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Use CORS middleware
+// CORS middleware'i EN BAŞTA olmalı
 app.UseCors("AllowSpecificOrigin");
+
+// Development ortamında daha detaylı hata mesajları
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
