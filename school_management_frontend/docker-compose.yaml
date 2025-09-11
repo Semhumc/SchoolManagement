@@ -1,0 +1,10 @@
+services:
+  frontend_app:
+    build:
+      context: ./
+    container_name: schoolmanagement_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      API_BASE_URL: http://localhost:5000
