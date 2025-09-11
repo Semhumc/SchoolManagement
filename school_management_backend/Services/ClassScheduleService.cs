@@ -90,7 +90,7 @@ namespace SchoolManagement.Services
                     {
                         ClassScheduleId = cs.ClassScheduleId,
                         ClassId = cs.ClassId,
-                        ClassName = cs.Class != null ? cs.Class.ClassName : "Unknown",
+                        ClassName = cs.Class.ClassName != null ? cs.Class.ClassName : "Unknown",
                         TeacherId = cs.TeacherId,
                         TeacherName = cs.Teacher != null ?
                             cs.Teacher.FirstName + " " + cs.Teacher.LastName : "Unknown",

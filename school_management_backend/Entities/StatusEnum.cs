@@ -2,8 +2,8 @@ namespace SchoolManagement.Entities
 {
     public enum StatusEnum
     {
-        start = 1,
-        present = 2,
-        finish = 3
+        waiting = 1,
+        started = 2,
+        finished = 3
     }
 }

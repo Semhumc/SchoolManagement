@@ -12,8 +12,8 @@ using SchoolManagement.Data;
 namespace school_management.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250910211322_UpdateSchema")]
-    partial class UpdateSchema
+    [Migration("20250911183333_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,9 @@ namespace school_management.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ClassId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ClassScheduleId")
                         .HasColumnType("integer");
 
@@ -91,59 +94,63 @@ namespace school_management.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("ClassScheduleId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("ClassManagements");
                 });
 
             modelBuilder.Entity("SchoolManagement.Entities.ClassSchedule", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ClassScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ClassScheduleId"));
 
-                    b.Property<int>("ClassTeacherId")
+                    b.Property<int>("ClassId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("interval");
+
+                    b.Property<DateTime>("ScheduleDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<TimeSpan?>("EndTime")
+                    b.Property<TimeSpan>("StartTime")
                         .HasColumnType("interval");
 
-                    b.Property<TimeSpan?>("StartTime")
-                        .HasColumnType("interval");
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("ClassScheduleId");
 
-                    b.HasIndex("ClassTeacherId");
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("ClassSchedules");
                 });
 
             modelBuilder.Entity("SchoolManagement.Entities.ClassStudent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("ClassId")
                         .HasColumnType("integer");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
+                    b.HasKey("ClassId", "StudentId");
 
                     b.HasIndex("StudentId");
 
@@ -152,21 +159,13 @@ namespace school_management.Migrations
 
             modelBuilder.Entity("SchoolManagement.Entities.ClassTeacher", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("ClassId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
+                    b.HasKey("ClassId", "TeacherId");
 
                     b.HasIndex("TeacherId");
 
@@ -309,15 +308,15 @@ namespace school_management.Migrations
             modelBuilder.Entity("SchoolManagement.Entities.Attendance", b =>
                 {
                     b.HasOne("SchoolManagement.Entities.ClassSchedule", "ClassSchedule")
-                        .WithMany()
+                        .WithMany("Attendances")
                         .HasForeignKey("ClassScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SchoolManagement.Entities.User", "Student")
-                        .WithMany()
+                        .WithMany("Attendances")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ClassSchedule");
@@ -327,6 +326,12 @@ namespace school_management.Migrations
 
             modelBuilder.Entity("SchoolManagement.Entities.ClassManagement", b =>
                 {
+                    b.HasOne("SchoolManagement.Entities.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SchoolManagement.Entities.ClassSchedule", "ClassSchedule")
                         .WithMany()
                         .HasForeignKey("ClassScheduleId")
@@ -339,20 +344,38 @@ namespace school_management.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SchoolManagement.Entities.User", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+
                     b.Navigation("ClassSchedule");
 
                     b.Navigation("Student");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("SchoolManagement.Entities.ClassSchedule", b =>
                 {
-                    b.HasOne("SchoolManagement.Entities.ClassTeacher", "ClassTeacher")
-                        .WithMany()
-                        .HasForeignKey("ClassTeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("SchoolManagement.Entities.Class", "Class")
+                        .WithMany("ClassSchedules")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("ClassTeacher");
+                    b.HasOne("SchoolManagement.Entities.User", "Teacher")
+                        .WithMany("ClassSchedules")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("SchoolManagement.Entities.ClassStudent", b =>
@@ -364,7 +387,7 @@ namespace school_management.Migrations
                         .IsRequired();
 
                     b.HasOne("SchoolManagement.Entities.User", "Student")
-                        .WithMany()
+                        .WithMany("ClassStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -383,7 +406,7 @@ namespace school_management.Migrations
                         .IsRequired();
 
                     b.HasOne("SchoolManagement.Entities.User", "Teacher")
-                        .WithMany()
+                        .WithMany("ClassTeachers")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -396,7 +419,7 @@ namespace school_management.Migrations
             modelBuilder.Entity("SchoolManagement.Entities.Comment", b =>
                 {
                     b.HasOne("SchoolManagement.Entities.Class", "Class")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -404,13 +427,13 @@ namespace school_management.Migrations
                     b.HasOne("SchoolManagement.Entities.User", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SchoolManagement.Entities.User", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -423,21 +446,21 @@ namespace school_management.Migrations
             modelBuilder.Entity("SchoolManagement.Entities.Score", b =>
                 {
                     b.HasOne("SchoolManagement.Entities.Class", "Class")
-                        .WithMany()
+                        .WithMany("Scores")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SchoolManagement.Entities.User", "Student")
-                        .WithMany()
+                        .WithMany("Scores")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SchoolManagement.Entities.User", "Teacher")
                         .WithMany()
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -468,9 +491,33 @@ namespace school_management.Migrations
 
             modelBuilder.Entity("SchoolManagement.Entities.Class", b =>
                 {
+                    b.Navigation("ClassSchedules");
+
                     b.Navigation("ClassStudents");
 
                     b.Navigation("ClassTeachers");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Scores");
+                });
+
+            modelBuilder.Entity("SchoolManagement.Entities.ClassSchedule", b =>
+                {
+                    b.Navigation("Attendances");
+                });
+
+            modelBuilder.Entity("SchoolManagement.Entities.User", b =>
+                {
+                    b.Navigation("Attendances");
+
+                    b.Navigation("ClassSchedules");
+
+                    b.Navigation("ClassStudents");
+
+                    b.Navigation("ClassTeachers");
+
+                    b.Navigation("Scores");
                 });
 #pragma warning restore 612, 618
         }

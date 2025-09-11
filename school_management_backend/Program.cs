@@ -57,17 +57,18 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// CORS middleware'i EN BAŞTA olmalı
-app.UseCors("AllowSpecificOrigin");
-
 // Development ortamında daha detaylı hata mesajları
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseRouting();
+
+app.UseCors("AllowSpecificOrigin"); // CORS routing'den sonra
+
+app.UseAuthentication(); // önce authentication
+app.UseAuthorization();  // sonra authorization
 
 app.MapControllers();
 
