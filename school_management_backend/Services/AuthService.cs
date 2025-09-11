@@ -6,7 +6,7 @@ using SchoolManagement.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using BCrypt.Net;
 
 namespace SchoolManagement.Services
 {
@@ -25,14 +25,19 @@ namespace SchoolManagement.Services
         {
 
 
+            if (!Enum.TryParse(registerDto.Role, out RoleEnum role))
+            {
+                throw new ArgumentException("Invalid role specified.");
+            }
+
             var user = new User
             {
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 Email = registerDto.Email,
-                PasswordHash = registerDto.Password, 
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password), 
                 Phone = registerDto.Phone,
-                Role = Enum.Parse<RoleEnum>(registerDto.Role)
+                Role = role
             };
 
             _context.Users.Add(user);
@@ -52,7 +57,7 @@ namespace SchoolManagement.Services
                 throw new Exception("User not found");
             }
 
-            if (user.PasswordHash != loginDto.Password)
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
                 throw new Exception("Invalid credentials");
 
             var tokenHandler = new JwtSecurityTokenHandler();

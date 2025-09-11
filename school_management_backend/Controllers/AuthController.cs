@@ -18,8 +18,20 @@ namespace SchoolManagement.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            var user = await _authService.RegisterAsync(dto);
-            return Ok(new { message = "Kayıt başarılı", user.Email, Role = user.Role.ToString() });
+            try
+            {
+                var user = await _authService.RegisterAsync(dto);
+                return Ok(new { message = "Kayıt başarılı", user.Email, Role = user.Role.ToString() });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (e.g., using a logger)
+                return StatusCode(500, new { message = "An error occurred during registration.", details = ex.Message });
+            }
         }
 
         [HttpPost("login")]

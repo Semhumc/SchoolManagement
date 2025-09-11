@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "zFSiWMJWfLE=",
+  "dgSpecHash": "PWz31NDtXDk=",
   "success": true,
   "projectFilePath": "C:\\Users\\SEMIH\\Desktop\\SchoolManagement\\school_management_backend\\school_management.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\SEMIH\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\SEMIH\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\SEMIH\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.9\\microsoft.aspnetcore.authentication.jwtbearer.9.0.9.nupkg.sha512",
     "C:\\Users\\SEMIH\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.4\\microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
